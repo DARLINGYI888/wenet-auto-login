@@ -1,0 +1,9 @@
+# 统一换行；PowerShell 5.1 需要 UTF-8 BOM，请勿用工具剥掉 BOM
+* text=auto
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

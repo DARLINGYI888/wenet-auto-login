@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate example config JSON
+        shell: pwsh
+        run: |
+          Get-Content config.example.json -Raw | ConvertFrom-Json | Out-Null
+          Write-Host 'config.example.json OK'
+
+      - name: PowerShell syntax check
+        shell: pwsh
+        run: |
+          $failed = $false
+          Get-ChildItem -Recurse -Filter *.ps1 | ForEach-Object {
+            $errors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              $_.FullName, [ref]$null, [ref]$errors)
+            if ($errors -and $errors.Count -gt 0) {
+              Write-Host "PARSE ERRORS: $($_.FullName)"
+              $errors | ForEach-Object { Write-Host ("  " + $_.Message) }
+              $failed = $true
+            }
+          }
+          if ($failed) { exit 1 }
+          Write-Host 'PowerShell syntax OK'
+
+      - name: PSScriptAnalyzer (errors only)
+        shell: pwsh
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $issues = @(Invoke-ScriptAnalyzer -Path . -Recurse -Severity Error)
+          if ($issues.Count -gt 0) {
+            $issues | Format-Table -AutoSize
+            exit 1
+          }
+          Write-Host 'PSScriptAnalyzer OK'
+
+      - name: Self test (device selection rules)
+        shell: pwsh
+        run: |
+          Copy-Item config.example.json config.json
+          powershell -NoProfile -ExecutionPolicy Bypass -File .\wenet_auto.ps1 -SelfTest -ConfigPath .\config.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host 'Self test OK'

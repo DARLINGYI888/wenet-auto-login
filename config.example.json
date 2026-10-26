@@ -1,0 +1,38 @@
+{
+  "account": "你的学号或工号",
+  "password": "你的密码（一般是身份证后6位）",
+  "passwordDpapi": "",
+
+  "portalIp": "10.112.0.10",
+  "nasIp": "10.112.1.253",
+  "wlanacname": "",
+  "deviceType": "PC",
+
+  "campusIpPrefixes": ["10.111."],
+  "campusGatewayFallback": "10.111.0.1",
+  "autoAddCampusRoute": true,
+
+  "kickRules": [
+    {
+      "name": "优先下线 PC",
+      "match": { "deviceType": ["PC"] },
+      "pick": "oldest"
+    },
+    {
+      "name": "其余设备随机",
+      "match": {},
+      "pick": "random"
+    }
+  ],
+  "neverKickMacs": [],
+  "protectDeviceTypes": [],
+  "protectIpPrefixes": [],
+
+  "maxKickPerRun": 3,
+  "kickWaitSeconds": 1,
+
+  "startupWaitSeconds": 300,
+  "retryIntervalSeconds": 5,
+  "maxAttempts": 6,
+  "logRetentionDays": 14
+}
