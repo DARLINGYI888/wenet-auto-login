@@ -45,9 +45,17 @@ English: a small Windows PowerShell tool that logs into a WeNet campus captive p
 - 安装计划任务需要管理员权限（一次性）
 - 无需 Python/Node，无第三方模块
 
+## 一键控制台（推荐）
+
+不想编辑 JSON、敲命令？直接**双击 `start.bat`**，会打开一个控制台菜单：
+
+- 首次运行：自动引导填写学号/密码（DPAPI 加密保存），并询问是否安装开机任务；
+- 之后菜单里可以：立即登录、演练预览、查看日志、修改学号/密码、**可视化修改下线规则**、规则自检、安装/卸载开机任务；
+- 修改规则时按 1/2/3 选预设即可（优先 PC、只踢手机、随机、先清僵尸设备、按 MAC/设备类型），不用打开配置文件。
+
 ## 安装
 
-1. 下载或克隆本仓库到任意目录（下面以 `<项目目录>` 表示）。
+1. 下载或克隆本仓库到任意目录（下面以 `<项目目录>` 表示）。（下面以 `<项目目录>` 表示）。
 2. 复制配置模板并填写：
 
    ```powershell
@@ -200,6 +208,7 @@ powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
 
 | 操作 | 方法 |
 | --- | --- |
+| 打开控制台菜单 | 双击 `start.bat` |
 | 演练（不下线、不登录） | `test_dryrun.bat` 或 `-DryRun` |
 | 立即真实运行 | `run_now.bat`（带 `-Force`） |
 | 只自检下线规则 | `-SelfTest` |
@@ -216,9 +225,11 @@ powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
 ├─ config.json             # 你的本地配置（已 gitignore）
 ├─ install.bat / install_task.ps1
 ├─ uninstall.bat / uninstall_task.ps1
+├─ start.bat               # 一键打开控制台菜单（推荐）
 ├─ run_now.bat             # 立即运行
 ├─ test_dryrun.bat         # 演练
 ├─ add_route.bat           # 调试：手动补临时路由
+├─ tools/menu.ps1          # 控制台菜单
 ├─ tools/set_password.ps1  # DPAPI 加密密码
 ├─ docs/api.md             # 协议说明
 ├─ logs/                   # 运行日志（已 gitignore）
