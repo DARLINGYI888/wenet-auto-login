@@ -2,6 +2,13 @@
 
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循语义化版本。
 
+## [1.2.1] - 2026-10-26
+
+### Changed
+
+- 精简仓库：移除已被控制台菜单取代的 `run_now.bat`、`test_dryrun.bat`、`add_route.bat`、`tools/set_password.ps1`；
+- README / SECURITY 更新为“控制台优先”的用法（start.bat → 菜单里完成登录、演练、改规则、改密码、装任务）。
+
 ## [1.2.0] - 2026-10-26
 
 ### Added

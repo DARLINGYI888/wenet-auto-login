@@ -2,7 +2,7 @@
 <#
   WeNet 校园网自动登录脚本（Windows）
   适用于 WeNet 门户；示例：某高校 WeNet 门户，portal 10.112.0.10
-  版本：1.2.0  许可证：MIT
+  版本：1.2.1  许可证：MIT
   规则（按用户要求）：
     - 只在「开机后第一次登录 Windows」时运行一次，跑完即退出；运行期间不后台监控、不自动重连。
     - 没有登录则尝试登录；账号设备名额已满时：优先下线 PC；若全是手机/平板则随机下线一台，然后重新登录。
@@ -34,7 +34,7 @@ $script:LogDir = Join-Path $script:Root 'logs'
 if (-not (Test-Path -LiteralPath $script:LogDir)) { New-Item -ItemType Directory -Path $script:LogDir -Force | Out-Null }
 $script:LogFile = Join-Path $script:LogDir ('wenet-' + (Get-Date -Format 'yyyyMMdd') + '.log')
 $script:RunId = ([guid]::NewGuid().ToString('N')).Substring(0, 6)
-$script:Version = '1.2.0'
+$script:Version = '1.2.1'
 $script:Cfg = $null
 $script:Token = $null
 $script:PortalBase = ''

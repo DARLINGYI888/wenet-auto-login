@@ -1,6 +1,8 @@
 # WeNet 校园网自动登录（Windows）
 
-Windows 开机登录后，自动完成 WeNet 校园网认证：没登录就登录；名额满了就按你自定义的规则下线一台设备，再登录。
+Windows 开机登录后自动完成 WeNet 校园网认证：没登录就登录；名额满了就按你自定义的规则下线一台设备，再登录。
+
+**新手友好**：双击 `start.bat` 打开 cmd 控制台菜单，跟着提示填账号、改规则、装开机任务即可，不需要编辑 JSON 或敲命令。
 
 > 本项目基于对 WeNet 认证前端与其 HTTP 接口的逆向整理，**仅用于个人在自己学校、使用自己账号的自动化**。
 > 请遵守所在学校的网络使用规定；接口可能随校方升级而变化。
@@ -9,7 +11,7 @@ English: a small Windows PowerShell tool that logs into a WeNet campus captive p
 
 ## 功能特性
 
-- **只在开机后第一次登录 Windows 时执行一次**，跑完即退出：不常驻后台、不定时轮询、运行中掉线不会自动重连；
+- **cmd 控制台菜单** `start.bat`：首次向导、一键登录/演练、可视化修改下线规则、安装/卸载开机任务；`\n- **只在开机后第一次登录 Windows 时执行一次**，跑完即退出：不常驻后台、不定时轮询、运行中掉线不会自动重连；
 - 自动等待连上校园网 Wi-Fi（默认最多 5 分钟）；
 - 同时开着手机热点时，自动补一条到认证服务器的临时路由（需管理员权限）；
 - 已在线则跳过，不重复下线设备；
@@ -78,7 +80,7 @@ English: a small Windows PowerShell tool that logs into a WeNet campus captive p
    powershell -ExecutionPolicy Bypass -File .\wenet_auto.ps1
    ```
 
-   或者双击 `run_now.bat`（强制运行，忽略“3 分钟内已跑过”的保护）。
+   或者双击 `start.bat` 选 `1`（强制运行，忽略“3 分钟内已跑过”的保护）。
 
 5. 安装开机自启任务：**右键 `install.bat` → 以管理员身份运行**。
    它会在“当前用户登录 Windows 时”触发一次，并以管理员权限运行（补路由需要）。
@@ -195,13 +197,8 @@ powershell -ExecutionPolicy Bypass -File .\wenet_auto.ps1 -SelfTest
 
 ### 密码加密（可选）
 
-不想在配置文件里放明文密码时：
+在控制台菜单里选 `4. 修改学号 / 密码`，输入的密码会自动用当前 Windows 用户的 DPAPI 加密写入 `config.json` 的 `passwordDpapi`，并清空明文 `password`，不需要额外脚本。
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
-```
-
-输入密码后，脚本会用当前 Windows 用户的 DPAPI 加密写入 `config.json` 的 `passwordDpapi`，并清空明文 `password`。
 注意：DPAPI 密文只能被**同一个 Windows 用户、同一台机器**解密。
 
 ## 使用
@@ -209,8 +206,8 @@ powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
 | 操作 | 方法 |
 | --- | --- |
 | 打开控制台菜单 | 双击 `start.bat` |
-| 演练（不下线、不登录） | `test_dryrun.bat` 或 `-DryRun` |
-| 立即真实运行 | `run_now.bat`（带 `-Force`） |
+| 演练（不下线、不登录） | 菜单选 `2`，或 `wenet_auto.ps1 -DryRun` |
+| 立即真实运行 | 菜单选 `1`，或 `wenet_auto.ps1 -Force` |
 | 只自检下线规则 | `-SelfTest` |
 | 查看版本 | `-ShowVersion` |
 | 查看日志 | `<项目目录>\logs\wenet-YYYYMMDD.log` |
@@ -226,14 +223,9 @@ powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
 ├─ install.bat / install_task.ps1
 ├─ uninstall.bat / uninstall_task.ps1
 ├─ start.bat               # 一键打开控制台菜单（推荐）
-├─ run_now.bat             # 立即运行
-├─ test_dryrun.bat         # 演练
-├─ add_route.bat           # 调试：手动补临时路由
 ├─ tools/menu.ps1          # 控制台菜单
-├─ tools/set_password.ps1  # DPAPI 加密密码
 ├─ docs/api.md             # 协议说明
 ├─ logs/                   # 运行日志（已 gitignore）
-├─ .private/               # 本地私有文件（已 gitignore）
 ├─ SECURITY.md
 ├─ CONTRIBUTING.md
 └─ CHANGELOG.md
@@ -243,12 +235,12 @@ powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
 
 **1. 提示“认证页无法访问”**
 - 确认电脑连的是校园网 Wi-Fi，不是手机热点；
-- 同时开热点时，需要管理员权限补路由：右键 `run_now.bat` → 以管理员身份运行，或先运行 `add_route.bat`；
+- 同时开热点时，需要管理员权限补路由：右键 `start.bat` → 以管理员身份运行 → 选 `1`，脚本会自动补路由；
 - 学校换了认证服务器地址的话，改 `portalIp` / `nasIp`。
 
 **2. 开机后没登录成功**
 - 看 `logs`。Wi-Fi 可能要几十秒才连上，脚本默认等 5 分钟；
-- 本次开机失败后不会自动再试（按设计，运行期间不重连）；可以手动 `run_now.bat` 或重启。
+- 本次开机失败后不会自动再试（按设计，运行期间不重连）；可以在菜单里选 `1` 手动重试，或重启。
 
 **3. 设备被踢后同一秒又自己登录回来**
 - 学校对手机/平板有“无感知认证”（MAC 绑定），只发断开请求会被立刻自动重新认证；

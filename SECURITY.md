@@ -10,15 +10,9 @@
 
 ## 密码存储
 
-- 默认情况下密码以**明文**保存在 `config.json`（仅本机使用）。
-- 推荐用 DPAPI 加密：运行
-
-  ```powershell
-  powershell -ExecutionPolicy Bypass -File .\tools\set_password.ps1
-  ```
-
-  它会把密码用当前 Windows 用户的 DPAPI 加密后写入 `config.json` 的 `passwordDpapi` 字段，并清空明文 `password`。
-  注意：DPAPI 密文只能用**同一个 Windows 用户**（同一台机器）解密；换用户/重装系统后需要重新运行一次。
+- 首次运行 `start.bat` 时，向导会让你输入密码，并默认用当前 Windows 用户的 DPAPI 加密后写入 `config.json` 的 `passwordDpapi` 字段，明文 `password` 留空。
+- 之后要改密码：菜单选 `4. 修改学号 / 密码`，同样会用 DPAPI 加密保存。
+- 注意：DPAPI 密文只能用**同一个 Windows 用户**（同一台机器）解密；换用户/重装系统后需要重新输入一次。
 
 ## 日志
 

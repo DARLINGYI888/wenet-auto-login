@@ -2,7 +2,7 @@
 <#
   WeNet 校园网自动登录 - 控制台菜单
   用法：双击 start.bat，或在 cmd 里运行 start.bat
-  版本：1.2.0
+  版本：1.2.1
 #>
 [CmdletBinding()]
 param(
@@ -16,7 +16,7 @@ if (-not $ConfigPath) { $ConfigPath = Join-Path $script:Root 'config.json' }
 $script:ConfigPath = $ConfigPath
 $script:ExamplePath = Join-Path $script:Root 'config.example.json'
 $script:MainScript = Join-Path $script:Root 'wenet_auto.ps1'
-$script:Version = '1.2.0'
+$script:Version = '1.2.1'
 $script:TaskFile = 'C:\Windows\System32\Tasks\WeNetAutoLogin'
 
 $script:Bar = '============================================================'
